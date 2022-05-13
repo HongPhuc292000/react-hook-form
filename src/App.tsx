@@ -1,24 +1,31 @@
 import React from 'react';
-import logo from './logo.svg';
+import { useForm } from 'react-hook-form';
 import './App.css';
 
+interface infoInput{
+  firstname: string,
+  lastname: string
+}
+
 function App() {
+  const { register, handleSubmit, watch, formState: {errors} } = useForm<infoInput>({
+    defaultValues:{
+      firstname: 'Phuc',
+      lastname: 'Nguyen'
+    }
+  })
+
+  const onsubmit = (data: infoInput) => {
+    console.log(data);
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form className='form-wrap' onSubmit={handleSubmit(onsubmit)}>
+        <input {...register("firstname", {required: {value: true, message: 'something wrong'}})} placeholder="firstname"/>
+        <p>{errors?.firstname?.message}</p>
+        <input type="text" {...register("lastname")}  placeholder="lastname"/>
+        <input type="submit" />
+      </form>
     </div>
   );
 }
